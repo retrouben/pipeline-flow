@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Pipeline Flow</title>
+  <script src="tableau.extensions.1.latest.js"></script>
+  <style>
+    :root {
+      --bg: #111D35; --edge: #22314F; --text: #EEF2F8; --muted: #8A9BB8; --faint: #5C6B88;
+      --teal: #2EC4B6; --red: #FF5C6C; --amber: #FFB547; --blue: #4C8DFF; --violet: #9B7BFF;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+      font-family: "Tableau Book", "Benton Sans", -apple-system, "Segoe UI", sans-serif; overflow: hidden; }
+    #app { position: absolute; inset: 0; padding: 12px 14px 8px; display: flex; flex-direction: column; }
+    header { display: flex; align-items: baseline; justify-content: space-between; }
+    h1 { margin: 0; font: 600 15px "Tableau Semibold", -apple-system, sans-serif; letter-spacing: .1px; }
+    .sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+    #reset { background: transparent; color: var(--muted); border: 1px solid var(--edge); border-radius: 12px;
+      font-size: 10px; padding: 3px 10px; cursor: pointer; opacity: 0; transition: opacity .3s, color .2s, border-color .2s; }
+    #reset.on { opacity: 1; }
+    #reset:hover { color: var(--text); border-color: var(--teal); }
+    #chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 6px; }
+    .chip { background: linear-gradient(135deg, rgba(255,255,255,.045), rgba(255,255,255,.01));
+      border: 1px solid var(--edge); border-radius: 10px; padding: 7px 10px; min-height: 52px;
+      opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease; }
+    .chip.show { opacity: 1; transform: none; }
+    .chip .k { font-size: 9px; letter-spacing: .8px; text-transform: uppercase; color: var(--faint); }
+    .chip .v { font: 600 15px "Tableau Semibold", -apple-system, sans-serif; margin-top: 2px; }
+    .chip .d { font-size: 10px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #stage { position: relative; flex: 1; min-height: 0; }
+    svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .link { fill: none; cursor: pointer; transition: stroke-opacity .25s; }
+    .node rect { cursor: pointer; transition: opacity .25s; }
+    .lbl { font-size: 10.5px; fill: var(--text); pointer-events: none; }
+    .lbl .val { fill: var(--muted); font-size: 9.5px; }
+    .colhead { font-size: 9px; letter-spacing: 1px; fill: var(--faint); text-transform: uppercase; }
+    #tip { position: absolute; pointer-events: none; background: rgba(8,14,28,.96); border: 1px solid var(--edge);
+      border-radius: 8px; padding: 7px 9px; font-size: 11px; line-height: 1.45; opacity: 0; transition: opacity .15s;
+      box-shadow: 0 6px 24px rgba(0,0,0,.45); white-space: nowrap; z-index: 5; }
+    #tip b { font-weight: 600; }
+    footer { display: flex; align-items: center; gap: 8px; color: var(--faint); font-size: 9.5px; padding-top: 2px; }
+    .ramp { width: 110px; height: 6px; border-radius: 3px;
+      background: linear-gradient(90deg, var(--red), var(--amber) 40%, var(--teal)); }
+    #status { margin-left: auto; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div>
+        <h1>Pipeline Flow</h1>
+        <div class="sub">Segment → Category → Region · width = sales · colour = margin · click a flow to filter</div>
+      </div>
+      <button id="reset" title="Clear the selection">Reset selection</button>
+    </header>
+    <div id="chips">
+      <div class="chip"><div class="k">Biggest flow</div><div class="v" id="c1v">–</div><div class="d" id="c1d"></div></div>
+      <div class="chip"><div class="k">Margin drag</div><div class="v" id="c2v">–</div><div class="d" id="c2d"></div></div>
+      <div class="chip"><div class="k">Concentration</div><div class="v" id="c3v">–</div><div class="d" id="c3d"></div></div>
+    </div>
+    <div id="stage"><svg id="svg"></svg><div id="tip"></div></div>
+    <footer><span>margin</span><span>&lt; 0%</span><div class="ramp"></div><span>20%+</span><span id="status"></span></footer>
+  </div>
+  <script src="main.js"></script>
+</body>
+</html>
